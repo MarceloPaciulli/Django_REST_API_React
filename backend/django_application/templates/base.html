@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{% block title %}Default Title{% endblock %}</title>
+  <link rel="stylesheet" type="text/css" href="../../static/css/styles.css">
+</head>
+<body>
+  <header>
+    {% block header %}
+      <!--h1>Django example</h1-->
+    {% endblock %}
+  </header>
+  <main>
+    {% block content %}
+      <p>Default Content</p>
+    {% endblock %}
+  </main>
+  <footer>
+    {% block footer %}
+      <p></p>
+    {% endblock %}
+  </footer>
+</body>
+</html>

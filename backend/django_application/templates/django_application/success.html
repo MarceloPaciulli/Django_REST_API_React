@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="../../../static/css/styles.css">
+{% endblock %}
+
+{% block content %}
+  <div class="bg-image">
+    <div class="container d-flex flex-column justify-content-center align-items-center h-100">
+      <div class="alert alert-success text-center my-4 p-4 rounded" role="alert">
+        <div class="title-container">
+          <h1 class="text-success">Person created successfully!</h1>
+        </div>
+        <div class="button-container">
+          <a href="{% url 'index' %}" class="btn btn-lg btn-primary btn-crear my-4">Create another person</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
