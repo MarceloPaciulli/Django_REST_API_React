@@ -3,12 +3,19 @@ import { Modal, Button, Form } from 'react-bootstrap';
 
 function UpdateModal({ person, onSubmit, onClose }) {
   const [updatedPerson, setUpdatedPerson] = useState(person);
+  const [validated, setValidated] = useState(false);
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.preventDefault();
+      e.stopPropagation();
+      onClose();
+    }
     onSubmit(updatedPerson);
-    onClose();
+    setValidated(true);
   };
+
 
   const handleClose = () => {
     onClose(null);
@@ -20,10 +27,11 @@ function UpdateModal({ person, onSubmit, onClose }) {
         <Modal.Title className="black-title">Update Person</Modal.Title>
       </Modal.Header>
       <Modal.Body className="custom-modal-body">
-        <Form onSubmit={handleSubmit}>
+        <Form noValidate validated={validated} onSubmit={handleSubmit}>
           <Form.Group controlId="formBasicName">
             <Form.Label className="black-label">Name</Form.Label>
             <Form.Control
+             required
               type="text"
               placeholder="Enter name"
               value={updatedPerson && updatedPerson.nombre}
@@ -35,6 +43,7 @@ function UpdateModal({ person, onSubmit, onClose }) {
           <Form.Group controlId="formBasicLastName">
             <Form.Label className="black-label">Lastname</Form.Label>
             <Form.Control
+            required
               type="text"
               placeholder="Enter last name"
               value={updatedPerson && updatedPerson.apellido}
@@ -46,6 +55,7 @@ function UpdateModal({ person, onSubmit, onClose }) {
           <Form.Group controlId="formBasicEmail">
             <Form.Label className="black-label">Email</Form.Label>
             <Form.Control
+            required
               type="email"
               placeholder="Enter email"
               value={updatedPerson && updatedPerson.email}
@@ -57,6 +67,7 @@ function UpdateModal({ person, onSubmit, onClose }) {
           <Form.Group controlId="formBasicPhone">
             <Form.Label className="black-label">Phone</Form.Label>
             <Form.Control
+            required
               type="text"
               placeholder="Enter phone number"
               value={updatedPerson && updatedPerson.telefono}

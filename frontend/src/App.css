@@ -7,6 +7,39 @@
   pointer-events: none;
 }
 
+.success-message {
+  position: fixed;
+  width: 300px;
+  height: 50px;
+  background-color: green;
+  font-weight: bold;
+  border-radius: 5px;
+  color: white;
+  text-align: center;
+  padding-top:10px;
+  padding-bottom:10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+}
+
+.error-message {
+  position: fixed;
+  width: 300px;
+  height: 50px;
+  background-color: red;
+  font-weight: bold;
+  border-radius: 5px;
+  color: white;
+  text-align: center;
+  padding-top:10px;
+  padding-bottom:10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+}
+
+
 .form-container {
   background-color: #484848;
   padding: 20px;

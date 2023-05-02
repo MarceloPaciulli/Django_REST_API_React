@@ -6,12 +6,40 @@ import DeleteModal from './DeleteModal';
 import { Link } from 'react-router-dom';
 import '../Custom.css';
 
+
+function useSuccessMessage() {
+  const [successMessage, setSuccessMessage] = useState(null);
+
+  const showSuccessMessage = (message) => {
+    setSuccessMessage(message);
+
+    setTimeout(() => {
+      setSuccessMessage(null);
+    }, 3000);
+  };
+
+  return [successMessage, showSuccessMessage];
+}
+
+function useErrorMessage() {
+  const [errorMessage, setErrorMessage] = useState(null);
+  const showErrorMessage = (message) => {
+    setErrorMessage(message);
+    setTimeout(() => {
+      setErrorMessage(null);
+    }, 3000);
+  };
+
+  return [errorMessage, showErrorMessage];
+}
+
 const PeopleList = () => {
   const [personas, setPersonas] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPersona, setSelectedPersona] = useState(null);
   const [selectedPersonaDelete, setSelectedPersonaDelete] = useState(null);
-  
+  const [successMessage, showSuccessMessage] = useSuccessMessage();
+  const [errorMessage, showErrorMessage] = useErrorMessage("");
 
   useEffect(() => {
     const fetchPersonas = async () => {
@@ -23,8 +51,14 @@ const PeopleList = () => {
 
 
     const handleUpdate = async (updatedPerson) => {
+      if (!updatedPerson.nombre || !updatedPerson.apellido ||
+        !updatedPerson.email || !updatedPerson.telefono ) {
+        showErrorMessage("Please fill in the fieldError");
+        return;
+      }
       try {
         const response = await axios.put(`http://localhost:8000/api/personas/update/${updatedPerson.id}`, updatedPerson);
+        showSuccessMessage("Record successfully updated");
         setPersonas((prevPersons) => {
           const updatedPersons = prevPersons.map((person) => {
             if (person.id === updatedPerson.id) {
@@ -43,6 +77,7 @@ const PeopleList = () => {
     const handleDelete = async (persona) => {
         try {
           await axios.delete(`http://localhost:8000/api/personas/delete/${persona.id}`);
+          showSuccessMessage("Record successfully deleted");
           setPersonas(personas.filter((p) => p.id !== persona.id));
         } catch (error) {
           console.error(error);
@@ -155,6 +190,12 @@ const PeopleList = () => {
     <div className="people-list">
       <h2 className="dtlist-title">Persons List</h2>
       <Link to="/" className="button-return-list">Return to Index</Link>
+      {successMessage && (
+  <div className="success-message">
+    {successMessage}
+  </div>
+)}
+{errorMessage && <div className="error-message">{errorMessage}</div>}
       <input
         type="text"
         placeholder="Search"
