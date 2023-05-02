@@ -1,10 +1,11 @@
+import '../Custom.css';
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import DataTable from "react-data-table-component";
 import UpdateModal from './UpdateModal';
 import DeleteModal from './DeleteModal';
 import { Link } from 'react-router-dom';
-import '../Custom.css';
+const API_URL = process.env.REACT_APP_API_URL;
 
 
 function useSuccessMessage() {
@@ -43,7 +44,7 @@ const PeopleList = () => {
 
   useEffect(() => {
     const fetchPersonas = async () => {
-      const response = await axios.get("http://localhost:8000/api/personas/");
+      const response = await axios.get(`${API_URL}/api/personas/`);
       setPersonas(response.data);
     };
     fetchPersonas();
@@ -57,7 +58,7 @@ const PeopleList = () => {
         return;
       }
       try {
-        const response = await axios.put(`http://localhost:8000/api/personas/update/${updatedPerson.id}`, updatedPerson);
+        const response = await axios.put(`${API_URL}/api/personas/update/${updatedPerson.id}`, updatedPerson);
         showSuccessMessage("Record successfully updated");
         setPersonas((prevPersons) => {
           const updatedPersons = prevPersons.map((person) => {
@@ -76,7 +77,7 @@ const PeopleList = () => {
 
     const handleDelete = async (persona) => {
         try {
-          await axios.delete(`http://localhost:8000/api/personas/delete/${persona.id}`);
+          await axios.delete(`${API_URL}/api/personas/delete/${persona.id}`);
           showSuccessMessage("Record successfully deleted");
           setPersonas(personas.filter((p) => p.id !== persona.id));
         } catch (error) {

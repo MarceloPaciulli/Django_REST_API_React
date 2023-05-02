@@ -3,6 +3,7 @@ import axios from "axios";
 import '../../App.css';
 import { Navigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
+const API_URL = process.env.REACT_APP_API_URL;
 
 function PersonaForm() {
   const [nombre, setNombre] = useState("");
@@ -15,7 +16,7 @@ function PersonaForm() {
     event.preventDefault();
     const data = { nombre, apellido, email, telefono };
     try {
-      const res = await axios.post("http://localhost:8000/api/personas/", data);
+      const res = await axios.post(`${API_URL}/api/personas/`, data);
       console.log(res);
       setFormSubmitted(true);
     } catch (error) {
