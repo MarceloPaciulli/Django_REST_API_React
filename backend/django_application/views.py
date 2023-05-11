@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework import generics
+from rest_framework.exceptions import ValidationError
 from .models import Persona
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
@@ -10,6 +11,7 @@ from bson.objectid import ObjectId
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
+import bson
 
 
 def index(request):
@@ -21,7 +23,10 @@ class PersonaRetrieveView(generics.RetrieveAPIView):
 
     def get_object(self):
         _id = self.kwargs['_id']
-        return Persona.objects.get(_id=ObjectId(_id))
+        try:
+            return get_object_or_404(Persona, _id=ObjectId(_id))
+        except (Persona.DoesNotExist, bson.errors.InvalidId):
+            raise ValidationError({'error': 'Invalid ID Format for MongoDB'})
 
 
 class PersonaList(generics.ListCreateAPIView):
@@ -45,15 +50,21 @@ class PersonaUpdate(generics.UpdateAPIView):
 
     def get_object(self):
         _id = self.kwargs['_id']
-        return get_object_or_404(Persona, _id=ObjectId(_id))
+        try:
+            return get_object_or_404(Persona, _id=ObjectId(_id))
+        except (Persona.DoesNotExist, bson.errors.InvalidId):
+            raise ValidationError({'error': 'Invalid ID Format for MongoDB'})
 
 
 
 class PersonaDelete(generics.DestroyAPIView):
     def delete(self, request, _id):
-        persona = get_object_or_404(Persona, _id=ObjectId(_id))
-        persona.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        try:
+            persona = get_object_or_404(Persona, _id=ObjectId(_id))
+            persona.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except (Persona.DoesNotExist, bson.errors.InvalidId):
+            raise ValidationError({'error': 'Invalid ID Format for MongoDB'})
 
 
 class PersonCreateView(CreateView):
